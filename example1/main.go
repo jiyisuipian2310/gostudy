@@ -52,10 +52,18 @@ func main() {
 	goencryption.EasyDecrypt("aes/cbc/pkcs7/base64", encryptstring, g_strkeyStr, g_strivStr)
 	fmt.Printf("decrypt data: %s\n", string(stuobjJson))
 
-	var httpaddr string = "https://192.168.104.100:12345/go/gettokeninfo"
-	responsedata_enc, err := httpapi.SendAndRecvHttpPostMsg(httpaddr, encryptstring)
+	var httpmethod int = 1
+	var responsedata_enc string
+	if httpmethod == 1 {
+		var httpaddr string = "https://192.168.104.100:12345/go/gettokeninfo"
+		responsedata_enc, err = httpapi.SendAndRecvHttpsPostMsg(httpaddr, encryptstring)
+	} else {
+		var httpaddr string = "http://192.168.104.100:12346/go/gettokeninfo"
+		responsedata_enc, err = httpapi.SendAndRecvHttpPostMsg(httpaddr, encryptstring)
+	}
+
 	if err != nil {
-		fmt.Printf("SendAndRecvHttpPostMsg error: %s\n", err.Error())
+		fmt.Printf("SendAndRecvHttpsPostMsg error: %s\n", err.Error())
 		return
 	}
 
