@@ -1,6 +1,9 @@
 # github.com/agclqq/goencryption v0.0.0-20240613070353-27d1fd12e61f
 ## explicit; go 1.18
 github.com/agclqq/goencryption
+# github.com/sirupsen/logrus v1.9.3
+## explicit; go 1.13
+github.com/sirupsen/logrus
 # golang.org/x/crypto v0.24.0
 ## explicit; go 1.18
 golang.org/x/crypto/blowfish
@@ -14,3 +17,5 @@ golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 # golang.org/x/sys v0.21.0
 ## explicit; go 1.18
 golang.org/x/sys/cpu
+golang.org/x/sys/unix
+golang.org/x/sys/windows

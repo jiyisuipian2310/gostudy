@@ -2,7 +2,10 @@ module example1
 
 go 1.23.1
 
-require github.com/agclqq/goencryption v0.0.0-20240613070353-27d1fd12e61f
+require (
+	github.com/agclqq/goencryption v0.0.0-20240613070353-27d1fd12e61f
+	github.com/sirupsen/logrus v1.9.3
+)
 
 require (
 	golang.org/x/crypto v0.24.0 // indirect
