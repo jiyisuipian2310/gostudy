@@ -1,0 +1,80 @@
+package main
+
+/*
+1. 此示例展示了如何使用json包来解析json数据，并将其转换为结构体。
+2. 此示例展示里如何发送http和https请求，并获取响应数据，以及如何解析json数据。
+3. 此示例展示了如何对发送和接收的数据进行加密和解密
+*/
+
+import (
+	"encoding/json"
+	"example1/httpapi"
+	"fmt"
+
+	"github.com/agclqq/goencryption"
+)
+
+type Student struct {
+	Name   string `json:"name"`
+	Age    int    `json:"age"`
+	Gender string `json:"gender"`
+}
+
+type ResourceInfo struct {
+	ResourceIp       string `json:"resourceIp"`
+	ResourcePort     string `json:"resourcePort"`
+	ResourceAccount  string `json:"resourceAccount"`
+	ResourcePassword string `json:"resourcePassword"`
+}
+
+/*定义加解密的key值和向量值为常量*/
+const g_strkeyStr = "63dTjxISXlwAso0n"
+const g_strivStr = "a1b2c3d4e5f6g7h8"
+
+func main() {
+	var stuobj Student
+	stuobj.Name = "yull"
+	stuobj.Age = 25
+	stuobj.Gender = "male"
+
+	stuobjJson, err := json.Marshal(stuobj)
+	if err != nil {
+		return
+	}
+
+	fmt.Printf("plain data: %s\n", string(stuobjJson))
+
+	/*加密数据*/
+	encryptstring, err := goencryption.EasyEncrypt("aes/cbc/pkcs7/base64", string(stuobjJson), g_strkeyStr, g_strivStr)
+	fmt.Printf("encrypt data: %s\n", encryptstring)
+
+	/*解密数据*/
+	goencryption.EasyDecrypt("aes/cbc/pkcs7/base64", encryptstring, g_strkeyStr, g_strivStr)
+	fmt.Printf("decrypt data: %s\n", string(stuobjJson))
+
+	var httpaddr string = "https://192.168.104.100:12345/go/gettokeninfo"
+	responsedata_enc, err := httpapi.SendAndRecvHttpPostMsg(httpaddr, encryptstring)
+	if err != nil {
+		fmt.Printf("SendAndRecvHttpPostMsg error: %s\n", err.Error())
+		return
+	}
+
+	fmt.Printf("Responsedata data: %s", responsedata_enc)
+
+	responsedata_dec, err := goencryption.EasyDecrypt("aes/cbc/pkcs7/base64", responsedata_enc, g_strkeyStr, g_strivStr)
+	if err != nil {
+		fmt.Printf("EasyDecrypt error: %s\n", err.Error())
+		return
+	}
+
+	//responsedata_dec := RtKOL5b1lf3dkwRvRgwhkIJ/dGH45r/n+HqRVQiutiQy8TgCbbApsx1GU4YDc1WfE7gd8FFLfnsdpL9ffZDOiiqfVhJl1TuzkTFESFbCwA2Swtatn0uEMiv3waXGlroCD39Cv1OEMUb54dFvq0JdlIvlO+S/CN/+JyFRqLOPhSY=
+	fmt.Printf("Responsedata data: %s\n", responsedata_dec)
+
+	var resInfo = new(ResourceInfo)
+	json.Unmarshal([]byte(responsedata_dec), &resInfo)
+
+	fmt.Printf("ResourceIp: %s\n", resInfo.ResourceIp)
+	fmt.Printf("ResourcePort: %s\n", resInfo.ResourcePort)
+	fmt.Printf("ResourceUser: %s\n", resInfo.ResourceAccount)
+	fmt.Printf("ResourcePwd: %s\n", resInfo.ResourcePassword)
+}
