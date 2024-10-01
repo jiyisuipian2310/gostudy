@@ -19,6 +19,12 @@ import (
 	"os"
 )
 
+var (
+	gitHash   string
+	buildTime string
+	goVersion string
+)
+
 type Student struct {
 	Name   string `json:"name"`
 	Age    int    `json:"age"`
@@ -57,6 +63,24 @@ const g_strkeyStr = "63dTjxISXlwAso0n"
 const g_strivStr = "a1b2c3d4e5f6g7h8"
 
 func main() {
+	if len(os.Args) > 2 {
+		fmt.Printf("too many arguments !")
+		return
+	}
+
+	if len(os.Args) == 2 {
+		if os.Args[1] == "-v" || os.Args[1] == "-V" {
+			fmt.Printf("CommitHash : %s \n", gitHash)
+			fmt.Printf("BuildTime  : %s \n", buildTime)
+			fmt.Printf("GoVersion  : %s \n", goVersion)
+			return
+		} else {
+			fmt.Printf("param error !\n")
+			return
+		}
+	}
+
+
 	dataBytes, err := os.ReadFile("test.yaml")
 	if err != nil {
 		fmt.Println("读取文件失败：", err)
