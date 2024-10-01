@@ -13,6 +13,10 @@ import (
 
 	"github.com/agclqq/goencryption"
 	"github.com/sirupsen/logrus"
+
+	"gopkg.in/yaml.v3"
+
+	"os"
 )
 
 type Student struct {
@@ -28,11 +32,52 @@ type ResourceInfo struct {
 	ResourcePassword string `json:"resourcePassword"`
 }
 
+type Global struct {
+	SendHttpMsg bool
+}
+
+type Mysql struct {
+	Url  string
+	Port int
+}
+
+type Redis struct {
+	Host string
+	Port int
+}
+
+type Config struct {
+	Global Global `json:"global"`
+	Mysql Mysql   `json:"mysql"`
+	Redis Redis   `json:"redis"`
+}
+
 /*定义加解密的key值和向量值为常量*/
 const g_strkeyStr = "63dTjxISXlwAso0n"
 const g_strivStr = "a1b2c3d4e5f6g7h8"
 
 func main() {
+	dataBytes, err := os.ReadFile("test.yaml")
+	if err != nil {
+		fmt.Println("读取文件失败：", err)
+		return
+	}
+
+	fmt.Println("yaml 文件的内容: \n", string(dataBytes))
+
+	config := Config{}
+	err = yaml.Unmarshal(dataBytes, &config)
+	if err != nil {
+		fmt.Println("解析 yaml 文件失败：", err)
+		return
+	}
+	fmt.Printf("mysql Url config -> %+v\n", config.Mysql.Url)
+	fmt.Printf("mysql Port config -> %+v\n", config.Mysql.Port)
+	fmt.Printf("redis Host config -> %+v\n", config.Redis.Host)
+	fmt.Printf("redis Port config -> %+v\n", config.Redis.Port)
+	
+	fmt.Printf("global config -> %+v\n", config.Global.SendHttpMsg)
+
 	var stuobj Student
 	stuobj.Name = "yull"
 	stuobj.Age = 25
@@ -52,6 +97,10 @@ func main() {
 	/*解密数据*/
 	goencryption.EasyDecrypt("aes/cbc/pkcs7/base64", encryptstring, g_strkeyStr, g_strivStr)
 	logrus.Info(fmt.Sprintf("decrypt data: %s", string(stuobjJson)))
+
+	if config.Global.SendHttpMsg == false {
+		return 
+	}
 
 	var httpmethod int = 1
 	var responsedata_enc string

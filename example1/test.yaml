@@ -1,0 +1,11 @@
+
+global:
+  sendhttpmsg: false
+
+mysql:
+  url: 127.0.0.1
+  port: 3306
+
+redis:
+  host: 127.0.0.2
+  port: 6379
