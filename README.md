@@ -15,3 +15,6 @@ example3:
 
 example4:
     go 通道：有缓冲的通道和无缓冲的通道的使用
+
+example5:
+    select case 的使用
