@@ -1,6 +1,7 @@
 
 global:
   sendhttpmsg: false
+  portrange: 8000 -  9w000  # 端口范围
 
 mysql:
   url: 127.0.0.1

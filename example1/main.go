@@ -10,6 +10,8 @@ import (
 	"encoding/json"
 	"example1/httpapi"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/agclqq/goencryption"
 	"github.com/sirupsen/logrus"
@@ -40,6 +42,7 @@ type ResourceInfo struct {
 
 type Global struct {
 	SendHttpMsg bool
+	PortRange   string
 }
 
 type Mysql struct {
@@ -54,8 +57,8 @@ type Redis struct {
 
 type Config struct {
 	Global Global `json:"global"`
-	Mysql Mysql   `json:"mysql"`
-	Redis Redis   `json:"redis"`
+	Mysql  Mysql  `json:"mysql"`
+	Redis  Redis  `json:"redis"`
 }
 
 /*定义加解密的key值和向量值为常量*/
@@ -80,7 +83,6 @@ func main() {
 		}
 	}
 
-
 	dataBytes, err := os.ReadFile("test.yaml")
 	if err != nil {
 		fmt.Println("读取文件失败：", err)
@@ -99,8 +101,23 @@ func main() {
 	fmt.Printf("mysql Port config -> %+v\n", config.Mysql.Port)
 	fmt.Printf("redis Host config -> %+v\n", config.Redis.Host)
 	fmt.Printf("redis Port config -> %+v\n", config.Redis.Port)
-	
+
 	fmt.Printf("global config -> %+v\n", config.Global.SendHttpMsg)
+	fmt.Printf("global config -> %+v\n", config.Global.PortRange)
+
+	portRange := strings.Split(config.Global.PortRange, "-")
+	min, err := strconv.Atoi(strings.TrimSpace(portRange[0]))
+	if err != nil {
+		fmt.Printf("strconv.Atoi error -> %+v\n", err)
+		return
+	}
+	max, err := strconv.Atoi(strings.TrimSpace(portRange[1]))
+	if err != nil {
+		fmt.Printf("strconv.Atoi error -> %+v\n", err)
+		return
+	}
+
+	fmt.Printf("min port -> %+v, max port -> %+v\n", min, max)
 
 	var stuobj Student
 	stuobj.Name = "yull"
@@ -123,7 +140,7 @@ func main() {
 	logrus.Info(fmt.Sprintf("decrypt data: %s", string(stuobjJson)))
 
 	if config.Global.SendHttpMsg == false {
-		return 
+		return
 	}
 
 	var httpmethod int = 1
