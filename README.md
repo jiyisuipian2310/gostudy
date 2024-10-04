@@ -12,3 +12,6 @@ example2:
 
 example3:
     展示了类的继承
+
+example4:
+    go 通道：有缓冲的通道和无缓冲的通道的使用
