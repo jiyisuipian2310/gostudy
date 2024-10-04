@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -40,7 +41,9 @@ type httpMsgStruct struct {
 }
 
 func (handler *httpMsgStruct) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("body:%s\n", r.Body)
+	text, _ := io.ReadAll(r.Body)
+	fmt.Printf("bodydata: %s\n", text)
+	defer r.Body.Close()
 
 	for i := 0; i < len(handler.config.Interfaces); i++ {
 		if r.URL.Path == handler.config.Interfaces[i].Name {
