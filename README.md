@@ -18,3 +18,6 @@ example4:
 
 example5:
     select case 的使用
+
+example6:
+    http 服务器的实现, 响应数据从配置文件中读取

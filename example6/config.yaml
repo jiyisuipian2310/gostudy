@@ -1,0 +1,8 @@
+
+interfaces:
+  - name: /test/aaa
+    response: 192.168.1.1
+  - name: /test/bbb
+    response: 192.168.1.2
+  - name: /test/ccc
+    response: 192.168.1.3
