@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"example7/config"
+	"fmt"
 )
 
 /*
@@ -16,6 +16,5 @@ import (
 func main() {
 	fmt.Println("main Hello, world!")
 
-	config.loadConfig()
+	config.LoadConfig()
 }
-
