@@ -1,0 +1,2 @@
+listenaddr: "127.0.0.1:8800"
+idletimeout: 3600

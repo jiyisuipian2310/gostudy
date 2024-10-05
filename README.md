@@ -21,3 +21,9 @@ example5:
 
 example6:
     http 服务器的实现, 响应数据从配置文件中读取
+
+example7:
+    导入包的过程中一个典型的错误，使用其他包的函数时，函数名必须大写
+
+example8:
+    go tcp server 实现，支持多客户端连接，并发处理请求
