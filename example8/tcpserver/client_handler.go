@@ -37,6 +37,8 @@ func (client *clientHandler) ProcessMessage() {
 	defer func() {
 		if client.err == io.EOF {
 			fmt.Printf("客户端 %s 关闭连接\n", client.srcIP)
+		} else {
+			fmt.Println("read from client failed, err: ", client.err)
 		}
 		client.conn.Close()
 	}()
@@ -46,9 +48,6 @@ func (client *clientHandler) ProcessMessage() {
 		n, err := client.reader.Read(buf[:]) // 读取数据
 		client.err = err
 		if err != nil {
-			if err != io.EOF {
-				fmt.Println("read from client failed, err: ", err)
-			}
 			break
 		}
 		recvStr := string(buf[:n])

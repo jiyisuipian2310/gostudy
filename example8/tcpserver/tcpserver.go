@@ -4,6 +4,9 @@ import (
 	"example8/config"
 	"fmt"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -29,7 +32,7 @@ func NewTcpServer() (*TcpServer, error) {
 }
 
 func (s *TcpServer) DisplayCfgInfo() {
-	fmt.Printf("ListenAddr: %s\n", s.cfg.ListenAddr)
+	fmt.Printf("cfginfo - ListenAddr: %s\n", s.cfg.ListenAddr)
 }
 
 func (s *TcpServer) listen() (err error) {
@@ -43,7 +46,9 @@ func (s *TcpServer) listen() (err error) {
 
 func (s *TcpServer) serve() error {
 	for {
+		fmt.Printf("before accept\n")
 		netConn, err := s.listener.Accept()
+		fmt.Printf("after accept\n")
 		if err != nil {
 			if s.listener != nil {
 				return err
@@ -62,7 +67,7 @@ func (s *TcpServer) serve() error {
 
 		c := newClientHandler(conn, s.cfg)
 		c.DisplayClientInfo()
-		c.ProcessMessage()
+		go c.ProcessMessage()
 	}
 }
 
@@ -85,7 +90,36 @@ func (s *TcpServer) StartServer() (err error) {
 		done <- struct{}{}
 	}()
 
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGTERM, syscall.SIGINT)
+
+L:
+	for {
+		switch <-ch {
+		case syscall.SIGHUP:
+			fmt.Printf("syscall.SIGHUP received, stopping server\n")
+		case syscall.SIGTERM:
+			fmt.Printf("syscall.SIGTERM received, stopping server\n")
+		case syscall.SIGINT:
+			fmt.Printf("syscall.SIGINT received, stopping server\n")
+			if err := s.stop(); err != nil {
+				errChannel <- err
+			}
+			break L
+		}
+	}
+
 	<-done
 
+	return nil
+}
+
+func (s *TcpServer) stop() error {
+	s.shutdown = true
+	if s.listener != nil {
+		if err := s.listener.Close(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
