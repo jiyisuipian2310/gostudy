@@ -6,16 +6,21 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
 
 var cfgFile = "./config.yaml"
 
+type middlewareFunc func(string) error
+type middleware map[string]middlewareFunc
+
 type TcpServer struct {
-	listener net.Listener
-	shutdown bool
-	cfg      *config.Config
+	listener   net.Listener
+	shutdown   bool
+	cfg        *config.Config
+	middleware middleware
 }
 
 func NewTcpServer() (*TcpServer, error) {
@@ -24,8 +29,10 @@ func NewTcpServer() (*TcpServer, error) {
 		return nil, err
 	}
 
+	m := middleware{}
 	server := &TcpServer{
-		cfg: cfg,
+		cfg:        cfg,
+		middleware: m,
 	}
 
 	return server, nil
@@ -33,6 +40,10 @@ func NewTcpServer() (*TcpServer, error) {
 
 func (s *TcpServer) DisplayCfgInfo() {
 	fmt.Printf("cfginfo - ListenAddr: %s\n", s.cfg.ListenAddr)
+}
+
+func (s *TcpServer) AddMiddleware(command string, m middlewareFunc) {
+	s.middleware[strings.ToUpper(command)] = m
 }
 
 func (s *TcpServer) listen() (err error) {
@@ -46,9 +57,7 @@ func (s *TcpServer) listen() (err error) {
 
 func (s *TcpServer) serve() error {
 	for {
-		fmt.Printf("before accept\n")
 		netConn, err := s.listener.Accept()
-		fmt.Printf("after accept\n")
 		if err != nil {
 			if s.listener != nil {
 				return err
@@ -65,7 +74,7 @@ func (s *TcpServer) serve() error {
 			conn.SetDeadline(time.Now().Add(time.Duration(s.cfg.IdleTimeout) * time.Second))
 		}
 
-		c := newClientHandler(conn, s.cfg)
+		c := newClientHandler(conn, s.cfg, s.middleware)
 		c.DisplayClientInfo()
 		go c.ProcessMessage()
 	}
