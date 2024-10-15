@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
@@ -11,7 +13,7 @@ import (
 
 func main() {
 	// SFTP服务器的信息
-	host := "192.168.104.100:22"
+	host := "192.168.104.109:22"
 	user := "root"
 	password := "root100^YHN"
 	remoteFilePath := "/home/yull/miniserver/miniserver.tar.gz" // 在服务器上的文件路径
@@ -24,12 +26,17 @@ func main() {
 			ssh.Password(password),
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		Timeout:         3 * time.Second,
 	}
+
+	timeStr := time.Now().Format("2006-01-02 15:04:05")
+	fmt.Printf("currTime: %s\n", timeStr)
 
 	// 连接SSH服务端
 	conn, err := ssh.Dial("tcp", host, config)
 	if err != nil {
-		log.Fatalf("Failed to connect to remote server: %v", err)
+		timeStr := time.Now().Format("2006-01-02 15:04:05")
+		log.Fatalf("Failed to connect to remote server: %v, currTime: %s", err, timeStr)
 	}
 	defer conn.Close()
 
