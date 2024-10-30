@@ -1,0 +1,64 @@
+{
+	"global": {
+		"cert_file" : "/root/http_https_server/cert/server.crt",
+		"key_file" : "/root/http_https_server/cert/serverkey.pem"
+	},
+	"services": [
+		{
+			"listen_port": 8000,
+			"https_flag": false,
+			"delay_time": 0,
+			"interfaces": [
+				{
+					"name":"/aa/bb/111",
+					"body_response": [
+						{
+							"body":"11111",
+							"response":"11111's response"
+						},
+						{
+							"body":"22222",
+							"response":"22222's response"
+						},
+						{
+							"body":"33333",
+							"response":"33333's response"
+						},
+						{
+							"body":"44444",
+							"response":"44444's response"
+						}
+					],
+					"global_response":"{\"resultCode\":0,\"resultDesc\":\"\",\"resourceIp\":\"192.168.104.100\",\"resourcePort\":\"21\",\"resourceAccount\":\"ftpuser\",\"resourcePassword\":\"RtVkaLfgA7hhVlYXf6qJpA==\"}"
+				},
+				{
+					"name":"/aa/bb/222",
+					"body_response": [],
+					"global_response":"/aa/bb/222 global_response"
+				}
+			]
+		},
+		{
+			"listen_port": 8001,
+			"https_flag": true,
+			"delay_time": 0,
+			"interfaces": [
+				{
+					"name":"/aa/bb/333",
+					"body_response": [
+						{
+							"body":"123456",
+							"response":"123456's response"
+						}
+					],
+					"global_response":"/aa/bb/333 global_response"
+				},
+				{
+					"name":"/aa/bb/444",
+					"body_response": [],
+					"global_response":"/aa/bb/444 global_response"
+				}
+			]
+		}
+]	
+}

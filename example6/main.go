@@ -41,8 +41,7 @@ type httpMsgStruct struct {
 }
 
 func (handler *httpMsgStruct) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	text, _ := io.ReadAll(r.Body)
-	fmt.Printf("bodydata: %s\n", text)
+	bodydata, _ := io.ReadAll(r.Body)
 	defer r.Body.Close()
 
 	for i := 0; i < len(handler.config.Interfaces); i++ {
