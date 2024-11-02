@@ -39,3 +39,6 @@ example11:
 
 example12:
     根据配置文件启动http和https服务
+
+example13:
+    自定义结构体的序列化和反序列化
