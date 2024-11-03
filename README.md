@@ -46,3 +46,6 @@ example13:
 example14:
     定义Animal基类，Dog和Cat继承Animal类，并实现自己的方法
     定义一个公共接口，接口参数为Animal基类，在该接口中判断传入的对象是否为Dog或Cat类型，并调用相应的方法
+
+example15:
+    缓冲 channel 和 select 语句可以提高并发程序的效率和响应能力
