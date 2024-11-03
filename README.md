@@ -42,3 +42,7 @@ example12:
 
 example13:
     自定义结构体的序列化和反序列化
+
+example14:
+    定义Animal基类，Dog和Cat继承Animal类，并实现自己的方法
+    定义一个公共接口，接口参数为Animal基类，在该接口中判断传入的对象是否为Dog或Cat类型，并调用相应的方法
