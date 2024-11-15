@@ -68,3 +68,6 @@ example18:
     然后代理和资源建立连接，然后代理创建协程读取资源数据转发给客户端，读取客户端数据转发给资源
 
     和 example17 不同的是， example18 使用了 SetReadDeadline 感知读超时，减少了一个 goroutine 等待读超时的消耗
+
+example19:
+    go grpc 实现远程调用
