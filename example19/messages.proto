@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package Business;
+option go_package="/proto";
+
+service MessageService {
+  rpc SendMessage (RequestMessage) returns (ResponseMessage);
+}
+
+message  RequestMessage {
+  int32 ReqCode = 1;
+  string ReqData = 2;
+}
+
+message ResponseMessage {
+  int32 RespCode = 1;
+  string RespData = 2;
+}

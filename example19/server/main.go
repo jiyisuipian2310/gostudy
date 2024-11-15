@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"grpcdemo/proto"
 	"net"
@@ -9,14 +10,82 @@ import (
 	"google.golang.org/grpc"
 )
 
-type server struct {
-	proto.UnimplementedSendMessageServer
+const (
+	ADD_STUDENT_INFO    = 1
+	GET_STUDENT_INFO    = 2
+	DEL_STUDENT_INFO    = 3
+	UPDATE_STUDENT_INFO = 4
+	SHOW_STUDENT_INFO   = 5
+)
+
+type StudentInfo struct {
+	Name    string `json:"name"`
+	Age     int32  `json:"age"`
+	Address string `json:"address"`
 }
 
-func (s *server) Say(ctx context.Context, req *proto.SayRequest) (*proto.SayResponse, error) {
-	fmt.Println("OpCode: ", req.OpCode)
-	fmt.Println("OpMessage: ", req.OpMessage)
-	return &proto.SayResponse{Name: "Hello " + req.OpMessage}, nil
+type server struct {
+	proto.UnimplementedMessageServiceServer
+
+	MapStuInfo map[string]*StudentInfo
+}
+
+func (s *server) SendMessage(ctx context.Context, req *proto.RequestMessage) (*proto.ResponseMessage, error) {
+	var err error
+	if req.ReqCode == ADD_STUDENT_INFO {
+		err = s.AddStudentInfo(req.ReqData)
+	} else if req.ReqCode == SHOW_STUDENT_INFO {
+		_, err = s.ShowStudentInfo(req.ReqData)
+	} else if req.ReqCode == DEL_STUDENT_INFO {
+		err = s.DeleteStudentInfo(req.ReqData)
+	} else if req.ReqCode == UPDATE_STUDENT_INFO {
+		err = s.UpdateStudentInfo(req.ReqData)
+	}
+
+	respdata := fmt.Sprintf("Hello %s, Server received message", req.ReqData)
+	return &proto.ResponseMessage{RespCode: 0, RespData: respdata}, err
+}
+
+func (s *server) AddStudentInfo(reqdata string) error {
+	var sinfo StudentInfo
+	if err := json.Unmarshal([]byte(reqdata), &sinfo); err != nil {
+		return err
+	}
+
+	s.MapStuInfo[sinfo.Name] = &sinfo
+	return nil
+}
+
+func (s *server) DeleteStudentInfo(reqdata string) error {
+	var sinfo StudentInfo
+	if err := json.Unmarshal([]byte(reqdata), &sinfo); err != nil {
+		return err
+	}
+
+	delete(s.MapStuInfo, sinfo.Name)
+	return nil
+}
+
+func (s *server) UpdateStudentInfo(reqdata string) error {
+	var sinfo StudentInfo
+	if err := json.Unmarshal([]byte(reqdata), &sinfo); err != nil {
+		return err
+	}
+
+	_, exist := s.MapStuInfo[sinfo.Name]
+	if exist {
+		s.MapStuInfo[sinfo.Name] = &sinfo
+	}
+	return nil
+}
+
+func (s *server) ShowStudentInfo(reqdata string) (string, error) {
+	for k, v := range s.MapStuInfo {
+		stuinfo, _ := json.Marshal(v)
+		fmt.Printf("Name: %s, Info: %s\n", k, string(stuinfo))
+	}
+
+	return "", nil
 }
 
 func main() {
@@ -26,8 +95,9 @@ func main() {
 		return
 	}
 	s := grpc.NewServer()
-	proto.RegisterSendMessageServer(s, &server{})
-	//reflection.Register(s)
+	proto.RegisterMessageServiceServer(s, &server{
+		MapStuInfo: make(map[string]*StudentInfo),
+	})
 
 	defer func() {
 		s.Stop()
