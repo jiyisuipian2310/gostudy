@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MessageService_SendMessage_FullMethodName = "/Business.MessageService/SendMessage"
+	MessageService_SendMessage_FullMethodName    = "/Business.MessageService/SendMessage"
+	MessageService_GetStudentInfo_FullMethodName = "/Business.MessageService/GetStudentInfo"
 )
 
 // MessageServiceClient is the client API for MessageService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageServiceClient interface {
 	SendMessage(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (*ResponseMessage, error)
+	GetStudentInfo(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ResponseMessage], error)
 }
 
 type messageServiceClient struct {
@@ -47,11 +49,31 @@ func (c *messageServiceClient) SendMessage(ctx context.Context, in *RequestMessa
 	return out, nil
 }
 
+func (c *messageServiceClient) GetStudentInfo(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ResponseMessage], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &MessageService_ServiceDesc.Streams[0], MessageService_GetStudentInfo_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[RequestMessage, ResponseMessage]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MessageService_GetStudentInfoClient = grpc.ServerStreamingClient[ResponseMessage]
+
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility.
 type MessageServiceServer interface {
 	SendMessage(context.Context, *RequestMessage) (*ResponseMessage, error)
+	GetStudentInfo(*RequestMessage, grpc.ServerStreamingServer[ResponseMessage]) error
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -64,6 +86,9 @@ type UnimplementedMessageServiceServer struct{}
 
 func (UnimplementedMessageServiceServer) SendMessage(context.Context, *RequestMessage) (*ResponseMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+}
+func (UnimplementedMessageServiceServer) GetStudentInfo(*RequestMessage, grpc.ServerStreamingServer[ResponseMessage]) error {
+	return status.Errorf(codes.Unimplemented, "method GetStudentInfo not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 func (UnimplementedMessageServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +129,17 @@ func _MessageService_SendMessage_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_GetStudentInfo_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(RequestMessage)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MessageServiceServer).GetStudentInfo(m, &grpc.GenericServerStream[RequestMessage, ResponseMessage]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MessageService_GetStudentInfoServer = grpc.ServerStreamingServer[ResponseMessage]
+
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -116,6 +152,12 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MessageService_SendMessage_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetStudentInfo",
+			Handler:       _MessageService_GetStudentInfo_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "messages.proto",
 }

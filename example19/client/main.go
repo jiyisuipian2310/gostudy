@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"grpcdemo/proto"
+	"io"
+	"log"
 	"os"
 
 	"google.golang.org/grpc"
@@ -54,6 +56,23 @@ func main() {
 		ReqCode: SHOW_STUDENT_INFO,
 		ReqData: "",
 	})
+
+	resStream, err := client.GetStudentInfo(context.TODO(), &proto.RequestMessage{})
+	if err != nil {
+		log.Fatalf("error while calling GetStudentInfo RPC: %v", err)
+	}
+
+	for {
+		msg, err := resStream.Recv()
+		if err == io.EOF {
+			// we've reached the end of the stream
+			break
+		}
+		if err != nil {
+			log.Fatalf("error while reading stream: %v", err)
+		}
+		log.Printf("Response from GetStudentInfo: %v", msg.RespData)
+	}
 
 	fmt.Println("按回车键退出程序...")
 	in := bufio.NewReader(os.Stdin)

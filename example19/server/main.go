@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"grpcdemo/proto"
 	"net"
+	"strconv"
+	"time"
 
 	"google.golang.org/grpc"
 )
@@ -44,6 +46,20 @@ func (s *server) SendMessage(ctx context.Context, req *proto.RequestMessage) (*p
 
 	respdata := fmt.Sprintf("Hello %s, Server received message", req.ReqData)
 	return &proto.ResponseMessage{RespCode: 0, RespData: respdata}, err
+}
+
+func (s *server) GetStudentInfo(req *proto.RequestMessage, stream grpc.ServerStreamingServer[proto.ResponseMessage]) error {
+	for i := 0; i < 10; i++ {
+		result := "Hello number " + strconv.Itoa(i)
+		res := &proto.ResponseMessage{
+			RespCode: 0,
+			RespData: result,
+		}
+		stream.Send(res)
+		time.Sleep(1000 * time.Millisecond)
+	}
+
+	return nil
 }
 
 func (s *server) AddStudentInfo(reqdata string) error {

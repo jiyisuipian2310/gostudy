@@ -1,0 +1,3 @@
+go rpc 代码生成命令如下：
+
+protoc --proto_path=./ --go_out=./ --go-grpc_out=./  .\messages.proto
