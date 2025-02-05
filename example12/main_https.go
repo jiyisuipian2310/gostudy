@@ -57,6 +57,8 @@ func (h *delayHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	bodydata, _ := io.ReadAll(r.Body)
 	defer r.Body.Close()
+	
+	fmt.Printf("bodydata: %s\n", bodydata)
 
 	for _, interfaceCfg := range h.Interfaces {
 		if interfaceCfg.Name == r.URL.Path {
@@ -166,6 +168,9 @@ func main() {
 	ShowConfig()
 
 	for _, service := range appCfg.Services {
+		if service.ListenPort == 0 {
+			continue
+		}
 		if service.HttpsFlag {
 			go startHTTPSServer(service, appCfg.Global.CertFile, appCfg.Global.KeyFile)
 		} else {

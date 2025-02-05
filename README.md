@@ -74,3 +74,6 @@ example19:
 
 example20:
     使用go操作monggo数据库，并且修改了monggo客户端驱动的源码，在登录报文中添加了Token
+
+example21:
+	interface 的 switch 使用
