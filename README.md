@@ -77,3 +77,6 @@ example20:
 
 example21:
 	interface 的 switch 使用
+
+example22:
+	反射的基本使用
