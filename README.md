@@ -80,3 +80,6 @@ example21:
 
 example22:
 	反射的基本使用
+
+example23:
+	int 类型的切片，正向，反向排序练习
