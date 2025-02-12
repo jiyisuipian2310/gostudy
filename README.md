@@ -83,3 +83,10 @@ example22:
 
 example23:
 	int 类型的切片，正向，反向排序练习
+
+example24:
+    插件化开发：
+        统一插件接口：所有插件实现 Plugin 接口，保证一致性
+        插件注册机制：使用 map[string]reflect.Type 存储插件类型，支持动态注册
+        插件管理：PluginManager 负责插件加载、管理和执行
+        插件示例：实现了 SQL 注入检测和 XSS 检测插件，支持自动注册和调用
