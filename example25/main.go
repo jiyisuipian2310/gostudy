@@ -32,23 +32,21 @@ func (s *Student) ShowInfomation() (out string) {
 }
 
 func main() {
-	//学生1 到 复兴复印店 打印信息
-	s1 := &Student{
-		Show: &FuxingStore{},
-		Name: "学生1",
-		Age:  20,
+	students := []*Student{
+		&Student{
+			Show: &FuxingStore{},
+			Name: "学生1",
+			Age:  20,
+		},
+		&Student{
+			Show: &DongfangStore{},
+			Name: "学生2",
+			Age:  21,
+		},
 	}
 
-	info1 := s1.ShowInfomation()
-	fmt.Printf(info1)
-
-	//学生2 到 东方打字复印店 打印信息
-	s2 := &Student{
-		Show: &DongfangStore{},
-		Name: "学生2",
-		Age:  21,
+	for _, s := range students {
+		info := s.ShowInfomation()
+		fmt.Printf(info)
 	}
-
-	info2 := s2.ShowInfomation()
-	fmt.Printf(info2)
 }
