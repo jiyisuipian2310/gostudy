@@ -31,6 +31,8 @@ func (s *Student) ShowInfomation() (out string) {
 	return s.Show.ShowInfomation(s.Name, s.Age)
 }
 
+//设计模式中的依赖倒置原则
+//将依赖关系从代码中分离出来，通过将依赖关系定义为接口类型, 可以在运行时动态地替换实现
 func main() {
 	students := []*Student{
 		&Student{
@@ -42,6 +44,11 @@ func main() {
 			Show: &DongfangStore{},
 			Name: "学生2",
 			Age:  21,
+		},
+		&Student{
+			Show: &DongfangStore{},
+			Name: "学生3",
+			Age:  34,
 		},
 	}
 
