@@ -102,3 +102,6 @@ example25:
 example26: 设计模式中的开闭原则：对修改关闭，对扩展开放
 
 example27: 读取ini配置文件
+
+example28: 
+    使用 ReadFull 至少读取 一些数据， 超时读取不到，退出
