@@ -105,3 +105,6 @@ example27: 读取ini配置文件
 
 example28: 
     使用 ReadFull 至少读取 一些数据， 超时读取不到，退出
+
+example29: 
+    实现一个并发安全的 map
