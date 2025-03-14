@@ -1,0 +1,9 @@
+ListenPort: 61000
+HttpsFlag: false
+EncryptData: true
+CertFile: ./server.crt
+KeyFile: ./server.key
+Services:
+  - name: mysql:9000
+  - name: oracle:9001
+  - name: pgsql:9002

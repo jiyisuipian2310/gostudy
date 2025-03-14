@@ -111,3 +111,6 @@ example29:
 
 example30:
     通过channel实现一个并发安全的 map
+
+example31:
+    实现一个http或者https服务，接收数据然后转发给其他应用程序，应用数据可以是加密的，通过AES解密出来
