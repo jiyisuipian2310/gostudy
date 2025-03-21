@@ -114,3 +114,6 @@ example30:
 
 example31:
     实现一个http或者https服务，接收数据然后转发给其他应用程序，应用数据可以是加密的，通过AES解密出来
+
+example32:
+    实现一个http或者https服务，接收数据然后转发给其他应用程序

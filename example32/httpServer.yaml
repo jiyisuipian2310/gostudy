@@ -1,0 +1,9 @@
+ListenServerPort: 61000
+HttpsFlag: true
+CertFile: ../CA/server.crt
+KeyFile: ../CA/server.key
+Debug: true
+# Services:
+#   - name: mysql:9000
+#   - name: oracle:9001
+#   - name: pgsql:9002
