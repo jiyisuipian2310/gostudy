@@ -117,3 +117,9 @@ example31:
 
 example32:
     实现一个http或者https服务，接收数据然后转发给其他应用程序
+
+example33:
+    实现一个http或者https服务，接收数据然后转发给其他应用程序，这个http服务可以校验客户端证书
+
+example34:
+    实现一个http服务, 接收消息，然后ssh登录到主机资源，执行ssh命令
