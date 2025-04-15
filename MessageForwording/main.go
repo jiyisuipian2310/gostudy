@@ -82,8 +82,8 @@ func Help() {
 func main() {
 	config := Config{}
 
-	flag.IntVar(&config.ListenPort, "listenport", 0, "本地监听端口")
-	flag.StringVar(&config.TargetAddr, "targetaddr", "", "目标地址")
+	flag.IntVar(&config.ListenPort, "listenport", 0, "本地监听端口(9000)")
+	flag.StringVar(&config.TargetAddr, "targetaddr", "", "目标地址(127.0.0.1:8080)")
 	flag.Usage = Help
 
 	// 解析命令行参数
