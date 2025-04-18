@@ -70,6 +70,10 @@ func startForwarding(listenPort int, targetAddr string) {
 			log.Printf("接受连接时出错: %v", err)
 			continue
 		}
+
+		remoteAddr := conn.RemoteAddr()
+		fmt.Printf("Accepted connection from: %s, Forward to address: %s\n", remoteAddr.String(), targetAddr)
+
 		go handleConnection(conn, targetAddr)
 	}
 }
