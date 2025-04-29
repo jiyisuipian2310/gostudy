@@ -16,7 +16,9 @@ type OracleClient struct {
 
 func main() {
 	client := &OracleClient{}
-	client.login()
+	if client.login() == false {
+		return
+	}
 
 	for {
 		fmt.Println("=================================================================================================\n")
@@ -24,7 +26,7 @@ func main() {
 	}
 }
 
-func (c *OracleClient) login() {
+func (c *OracleClient) login() bool {
 	var (
 		username string
 		password string
@@ -58,11 +60,19 @@ func (c *OracleClient) login() {
 	db, err := sql.Open("godror", connStr)
 	if err != nil {
 		log.Printf("连接数据库失败: %v\n", err)
-		return
+		return false
+	}
+
+	// 测试连接
+	err = db.Ping()
+	if err != nil {
+		log.Printf("数据库连接测试失败: %v\n", err)
+		return false
 	}
 
 	c.db = db
 	fmt.Printf("登录oracle数据库成功, loginAddress[%s:%s], loginUser[%s], loginService[%s]\n", host, port, username, service)
+	return true
 }
 
 func (c *OracleClient) executeQuery() {

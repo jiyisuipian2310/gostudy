@@ -1,4 +1,4 @@
-module main
+module oracle_client
 
 go 1.23.1
 
