@@ -123,3 +123,9 @@ example33:
 
 example34:
     实现一个http服务, 接收消息，然后ssh登录到主机资源，执行ssh命令
+
+http_client_lib:
+    实现了发送 http 或者 https 的消息接口函数，被编译成动态库供 C 或者 C++ 调用
+    SendHttpRequestSync   同步发送 http 或者 https 消息
+    SendHttpRequestAsync  异步发送 http 或者 https 消息
+    收到消息后通过 void (*HttpCallback)(const char* response, int status, int error_type, void* user_data); 类型的回调函数通知 C 或者 C++ 侧
