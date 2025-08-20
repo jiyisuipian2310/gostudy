@@ -63,7 +63,7 @@ var httpClient = &http.Client{
 		},
 		MaxIdleConns:        100,
 		MaxIdleConnsPerHost: 10,
-		IdleConnTimeout:     30 * time.Second,
+		IdleConnTimeout:     10 * time.Second,
 	},
 }
 
