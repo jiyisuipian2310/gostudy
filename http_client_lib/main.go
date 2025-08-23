@@ -79,7 +79,7 @@ func SendHttpRequestSync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody 
 		if err := json.Unmarshal([]byte(headers), &headerMap); err != nil {
 			cResp := C.CString("Failed to parse head data: " + err.Error())
 			defer C.free(unsafe.Pointer(cResp))
-			C.invoke_callback(callback, cResp, C.int(500), C.int(ErrorTypeOther), userData)
+			C.invoke_callback(callback, cResp, C.int(0), C.int(ErrorTypeOther), userData)
 			return
 		}
 	}
@@ -147,7 +147,7 @@ func SendHttpRequestAsync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody
 			if err := json.Unmarshal([]byte(headers), &headerMap); err != nil {
 				cResp := C.CString("Failed to parse head data: " + err.Error())
 				defer C.free(unsafe.Pointer(cResp))
-				C.invoke_callback(callback, cResp, C.int(500), C.int(ErrorTypeOther), userData)
+				C.invoke_callback(callback, cResp, C.int(0), C.int(ErrorTypeOther), userData)
 				return
 			}
 		}
