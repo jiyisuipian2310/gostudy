@@ -7,4 +7,4 @@ all:
 	chmod +x ${target}
 
 clean:
-	rm -rf ${target}
+	rm -rf $(basename $(target))*

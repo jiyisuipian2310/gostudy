@@ -4,7 +4,7 @@ package main
 #include <stdlib.h>
 #include <string.h>
 
-// 错误类型常量
+//begin http related defination
 typedef enum {
     ERROR_TYPE_NONE = 0,            // 无错误
     ERROR_TYPE_CONNECTION_FAILED,   // 连接失败
@@ -13,16 +13,17 @@ typedef enum {
     ERROR_TYPE_DNS,                 // DNS解析错误
     ERROR_TYPE_READ_RESPONSE,       // 读取响应失败
     ERROR_TYPE_OTHER                // 其他错误
-} ErrorType;
+} HttpErrorType;
 
 typedef void (*HttpCallback)(const char* response, int status, int error_type, void* user_data);
 
 // 辅助函数，用于调用回调
-static void invoke_callback(HttpCallback callback, const char* response, int status, int error_type, void* user_data) {
+static void invoke_http_callback(HttpCallback callback, const char* response, int status, int error_type, void* user_data) {
     if (callback != NULL) {
         callback(response, status, error_type, user_data);
     }
 }
+//end http related defination
 */
 import "C"
 import (
@@ -79,7 +80,7 @@ func SendHttpRequestSync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody 
 		if err := json.Unmarshal([]byte(headers), &headerMap); err != nil {
 			cResp := C.CString("Failed to parse head data: " + err.Error())
 			defer C.free(unsafe.Pointer(cResp))
-			C.invoke_callback(callback, cResp, C.int(0), C.int(ErrorTypeOther), userData)
+			C.invoke_http_callback(callback, cResp, C.int(0), C.int(ErrorTypeOther), userData)
 			return
 		}
 	}
@@ -103,7 +104,7 @@ func SendHttpRequestSync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody 
 		cResp := C.CString(errorMsg)
 		defer C.free(unsafe.Pointer(cResp))
 
-		C.invoke_callback(callback, cResp, C.int(0), C.int(errorType), userData)
+		C.invoke_http_callback(callback, cResp, C.int(0), C.int(errorType), userData)
 		return
 	}
 	defer resp.Body.Close()
@@ -112,14 +113,14 @@ func SendHttpRequestSync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody 
 	if err != nil {
 		cResp := C.CString("Failed to read response: " + err.Error())
 		defer C.free(unsafe.Pointer(cResp))
-		C.invoke_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeReadResponse), userData)
+		C.invoke_http_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeReadResponse), userData)
 		return
 	}
 
 	cResp := C.CString(string(respBody))
 	defer C.free(unsafe.Pointer(cResp))
 
-	C.invoke_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeNone), userData)
+	C.invoke_http_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeNone), userData)
 }
 
 //export SendHttpRequestAsync
@@ -147,7 +148,7 @@ func SendHttpRequestAsync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody
 			if err := json.Unmarshal([]byte(headers), &headerMap); err != nil {
 				cResp := C.CString("Failed to parse head data: " + err.Error())
 				defer C.free(unsafe.Pointer(cResp))
-				C.invoke_callback(callback, cResp, C.int(0), C.int(ErrorTypeOther), userData)
+				C.invoke_http_callback(callback, cResp, C.int(0), C.int(ErrorTypeOther), userData)
 				return
 			}
 		}
@@ -171,7 +172,7 @@ func SendHttpRequestAsync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody
 			cResp := C.CString(errorMsg)
 			defer C.free(unsafe.Pointer(cResp))
 
-			C.invoke_callback(callback, cResp, C.int(0), C.int(errorType), userData)
+			C.invoke_http_callback(callback, cResp, C.int(0), C.int(errorType), userData)
 			return
 		}
 		defer resp.Body.Close()
@@ -180,14 +181,14 @@ func SendHttpRequestAsync(cURL *C.char, cMethod *C.char, cHeaders *C.char, cBody
 		if err != nil {
 			cResp := C.CString("Failed to read response: " + err.Error())
 			defer C.free(unsafe.Pointer(cResp))
-			C.invoke_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeReadResponse), userData)
+			C.invoke_http_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeReadResponse), userData)
 			return
 		}
 
 		cResp := C.CString(string(respBody))
 		defer C.free(unsafe.Pointer(cResp))
 
-		C.invoke_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeNone), userData)
+		C.invoke_http_callback(callback, cResp, C.int(resp.StatusCode), C.int(ErrorTypeNone), userData)
 	}()
 }
 
