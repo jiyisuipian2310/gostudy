@@ -7,28 +7,28 @@
 using namespace std;
 
 void test_encrypt_decrypt() {
-	string strKey = "63dTjxISXlwAso0n";
-	string strIV = "a1b2c3d4e5f6g7h8";
-	cout << "秘钥: " << strKey << endl;
-	cout << "IV: " << strIV << endl;
-	
-	string strPlainData = "the world is so big, I want to see see !";
-	cout << "原始明文: " << strPlainData << endl;
-
-	char errMsg[256] = { 0 };
+    string strKey = "63dTjxISXlwAso0n";
+    string strIV = "a1b2c3d4e5f6g7h8";
+    cout << "秘钥: " << strKey << endl;
+    cout << "IV: " << strIV << endl;
     
-    char* encrypted = AESCBCEncrypt(strPlainData.data(), strKey.data(), strIV.data(), errMsg);
-	if(encrypted == NULL) {
-		cout << "加密错误: " << errMsg << endl;
+    string strPlainData = "the world is so big, I want to see see !";
+    cout << "原始明文: " << strPlainData << endl;
+
+    char errMsg[128] = { 0 };
+    
+    char* encrypted = AESCBCEncrypt(strPlainData.data(), strKey.data(), strIV.data(), errMsg, sizeof(errMsg));
+    if(encrypted == NULL) {
+        cout << "加密错误: " << errMsg << endl;
         return;
     }
     
     printf("加密结果: %s\n", encrypted);
     
 
-    char* decrypted = AESCBCDecrypt(encrypted, strKey.data(), strIV.data(), errMsg);
-	if(decrypted == NULL) {
-		cout << "解密错误: " << errMsg << endl;
+    char* decrypted = AESCBCDecrypt(encrypted, strKey.data(), strIV.data(), errMsg, sizeof(errMsg));
+    if(decrypted == NULL) {
+        cout << "解密错误: " << errMsg << endl;
         FreeCString(encrypted);
         return;
     }
@@ -56,7 +56,7 @@ void test_error_cases() {
     const char* iv = "abcdefghijklmno";
     
     char errMsg[256] = { 0 };
-    char* encrypted = AESCBCEncrypt(plaintext, wrong_key, iv, errMsg);
+    char* encrypted = AESCBCEncrypt(plaintext, wrong_key, iv, errMsg, sizeof(errMsg));
     if (encrypted == NULL) {
         printf("预期错误: %s\n", errMsg);
     }
