@@ -17,11 +17,11 @@ int main()
 
     char errMsg[256] = { 0 };
     
-    char* ciphertext = SM4Encrypt(strPlainData.data(), strKey.data(), strIV.data(), errMsg, sizeof(errMsg));
+    char* ciphertext = SM4CBCEncrypt(strPlainData.data(), strKey.data(), strIV.data(), errMsg, sizeof(errMsg));
     if (ciphertext) {
         printf("Encryption successful, ciphertext: %s\n", ciphertext);
         
-        char* decrypted = SM4Decrypt(ciphertext, strKey.data(), strIV.data(), errMsg, sizeof(errMsg));
+        char* decrypted = SM4CBCDecrypt(ciphertext, strKey.data(), strIV.data(), errMsg, sizeof(errMsg));
         if (decrypted) {
             printf("Decrypted text: %s\n", decrypted);
             FreeCString(decrypted);
