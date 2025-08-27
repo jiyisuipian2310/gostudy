@@ -7,13 +7,9 @@
 extern "C" {
 #endif
 
-int UploadFileByPassword(const char* address, const char* username, const char* password, 
-                        const char* remotePath, const char* localPath, 
-                        char* errMsg, int errMsgLen);
-
-int DownloadFileByPassword(const char* address, const char* username, const char* password, 
-                        const char* remotePath, const char* localPath, 
-                        char* errMsg, int errMsgLen);
+char* UploadFileByPassword(const char* address, const char* username, const char* password, const char* remotePath, const char* localPath);
+char* DownloadFileByPassword(const char* address, const char* username, const char* password, const char* remotePath, const char* localPath);
+void FreeCString(char* str);
 
 #ifdef __cplusplus
 }
