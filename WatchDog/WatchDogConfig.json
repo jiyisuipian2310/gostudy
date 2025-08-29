@@ -1,0 +1,22 @@
+{
+    "Apps": [
+        {
+            "name": "MessageForward",
+            "path": "/root/gostudy/MessageForwording",
+            "param": "-listenport 9000 -targetaddr 192.168.104.100:10000",
+            "enable": true
+        },
+        {
+            "name": "MessageForward",
+            "path": "/root/gostudy/MessageForwording",
+            "param": "-listenport 9001 -targetaddr 192.168.104.100:10000",
+            "enable": false
+        },
+        {
+            "name": "MessageForward",
+            "path": "/root/gostudy/MessageForwording",
+            "param": "-listenport 9002 -targetaddr 192.168.104.100:10000",
+            "enable": true
+        }
+    ]
+}
