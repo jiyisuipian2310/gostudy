@@ -24,9 +24,11 @@ func setupFileLogger(logFile string) (*os.File, error) {
 // 全局变量
 var (
 	logFile string
+	cfgfile string
 )
 
 func initFlags() {
+	flag.StringVar(&cfgfile, "cfg", "../conf/WatchDogConfig.json", "配置文件路径")
 	flag.StringVar(&logFile, "log", "", "日志文件路径，如果指定则输出到文件")
 
 	flag.Usage = func() {
@@ -41,12 +43,15 @@ func initFlags() {
 func main() {
 	initFlags()
 	if logFile != "" {
-		setupFileLogger(logFile)
+		if _, err := setupFileLogger(logFile); err != nil {
+			log.Printf("Error: Read %s failed: %s\n", logFile, err)
+			return
+		}
 	}
 
-	config, err := loadConfig("watchDogConfig.json") // 读取 JSON 文件
+	config, err := loadConfig(cfgfile) // 读取 JSON 文件
 	if err != nil {
-		log.Println("read watchDogConfig.json failed: %v", err)
+		log.Printf("Error: Read %s failed, %s\n", cfgfile, err)
 		return
 	}
 

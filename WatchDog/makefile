@@ -1,7 +1,7 @@
-target=watchDog
+target=WatchDog
 
 all:
-	go build -o ${target} main.go programManager.go config_reader.go
+	go build -o ${target} main.go programManager.go configReader.go
 
 clean:
 	rm -rf ${target}
