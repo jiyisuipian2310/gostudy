@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"go-plugin-system/plugin"
 )
 
 // SQL 注入扫描插件
@@ -19,5 +18,5 @@ func (s *SQLInjectionScanner) Execute(args map[string]interface{}) (map[string]i
 
 func init() {
 	fmt.Printf("sql_injection.go init ...\n")
-	plugin.RegisterPlugin(&SQLInjectionScanner{})
+	RegisterPlugin(&SQLInjectionScanner{})
 }

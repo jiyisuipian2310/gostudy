@@ -1,9 +1,13 @@
-package plugin
+package plugins
 
 import (
 	"fmt"
 	"reflect"
 )
+
+type Plugin interface {
+	Execute(args map[string]interface{}) (map[string]interface{}, error)
+}
 
 var plugins = make(map[string]Plugin)
 

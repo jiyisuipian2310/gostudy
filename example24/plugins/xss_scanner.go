@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"go-plugin-system/plugin"
 )
 
 // XSS 漏洞扫描插件
@@ -19,5 +18,5 @@ func (x *XSSScanner) Execute(args map[string]interface{}) (map[string]interface{
 
 func init() {
 	fmt.Printf("css_scanner.go init ...\n")
-	plugin.RegisterPlugin(&XSSScanner{})
+	RegisterPlugin(&XSSScanner{})
 }

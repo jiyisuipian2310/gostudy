@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go-plugin-system/plugin"
-	_ "go-plugin-system/plugin/plugins"
+	"go-plugin-system/plugins"
 )
 
 func main() {
-	manager := plugin.NewPluginManager()
+	manager := plugins.NewPluginManager()
 
 	// 执行 SQL 注入插件
 	result, err := manager.ExecutePlugin("plugins.SQLInjectionScanner", map[string]interface{}{"url": "http://example.com"})
