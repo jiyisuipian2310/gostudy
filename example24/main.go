@@ -9,16 +9,6 @@ import (
 func main() {
 	manager := plugin.NewPluginManager()
 
-	// 预先加载插件
-	pluginNames := []string{"plugins.SQLInjectionScanner", "plugins.XSSScanner"}
-	for _, name := range pluginNames {
-		err := manager.LoadPlugin(name)
-		if err != nil {
-			fmt.Println("加载插件失败:", err)
-			return
-		}
-	}
-
 	// 执行 SQL 注入插件
 	result, err := manager.ExecutePlugin("plugins.SQLInjectionScanner", map[string]interface{}{"url": "http://example.com"})
 	if err != nil {
