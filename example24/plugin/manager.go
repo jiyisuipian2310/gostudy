@@ -22,7 +22,7 @@ func NewPluginManager() *PluginManager {
 func RegisterPlugin(plugin Plugin) {
 	pluginType := reflect.TypeOf(plugin).Elem()
 	fmt.Printf("pluginType.String()=%s\n", pluginType.String())
-	pluginRegistry[plugin.Name()] = pluginType
+	pluginRegistry[pluginType.String()] = pluginType
 }
 
 // 加载插件

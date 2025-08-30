@@ -5,14 +5,8 @@ import (
 	"go-plugin-system/plugin"
 )
 
-const CSSPulginName string = "XSSScanner"
-
 // XSS 漏洞扫描插件
 type XSSScanner struct{}
-
-func (x *XSSScanner) Name() string {
-	return CSSPulginName
-}
 
 func (x *XSSScanner) Execute(args map[string]interface{}) (map[string]interface{}, error) {
 	param, ok := args["param"].(string)

@@ -5,14 +5,8 @@ import (
 	"go-plugin-system/plugin"
 )
 
-const SQLInjectionPulginName string = "SQLInjectionScanner"
-
 // SQL 注入扫描插件
 type SQLInjectionScanner struct{}
-
-func (s *SQLInjectionScanner) Name() string {
-	return SQLInjectionPulginName
-}
 
 func (s *SQLInjectionScanner) Execute(args map[string]interface{}) (map[string]interface{}, error) {
 	url, ok := args["url"].(string)
