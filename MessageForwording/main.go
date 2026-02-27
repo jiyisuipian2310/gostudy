@@ -86,12 +86,12 @@ func (p *ProxyInfo) RemoteToClient(ctx context.Context) error {
 			if err != nil {
 				errmsg := ""
 				if err == io.EOF {
-					errmsg = fmt.Sprintf("远端 %s 断开连接\n", p.RemoteAddress)
+					errmsg = fmt.Sprintf("服务端 %s 断开连接\n", p.RemoteAddress)
 				} else if opErr, ok := err.(*net.OpError); ok && opErr.Timeout() {
 					//fmt.Println("remote 读取超时")
 					continue
 				} else {
-					errmsg = fmt.Sprintf("读取远端 %s 数据失败, 原因：%s\n", p.RemoteAddress, err.Error())
+					errmsg = fmt.Sprintf("读取服务端 %s 数据失败, 原因：%s\n", p.RemoteAddress, err.Error())
 				}
 				log.Println(errmsg)
 				return fmt.Errorf(errmsg)
@@ -143,8 +143,8 @@ func Help() {
 
 func main() {
 	config := Config{}
-	flag.IntVar(&config.ListenPort, "listenport", 0, "本地监听端口(9000)")
-	flag.StringVar(&config.TargetAddr, "targetaddr", "", "目标地址(127.0.0.1:8080)")
+	flag.IntVar(&config.ListenPort, "listenport", 9000, "本地监听端口，默认：9000")
+	flag.StringVar(&config.TargetAddr, "targetaddr", "127.0.0.1:8080", "上游目标地址，默认：127.0.0.1:8080")
 	flag.Usage = Help
 	flag.Parse() // 解析命令行参数
 
