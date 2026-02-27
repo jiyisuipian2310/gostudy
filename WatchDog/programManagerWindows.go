@@ -124,7 +124,7 @@ func (pm *ProgramManager) waitForProgramExit(program *ProgramInfo) {
 	defer pm.mutex.Unlock()
 
 	if err != nil {
-		log.Printf("程序 %s (PID: %d) 退出: %v", program.Name, program.Pid, err)
+		log.Printf("程序 %s (PID: %d) 异常退出: %v", program.Name, program.Pid, err)
 	} else {
 		log.Printf("程序 %s (PID: %d) 正常退出", program.Name, program.Pid)
 	}

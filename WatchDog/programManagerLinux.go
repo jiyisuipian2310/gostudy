@@ -120,14 +120,14 @@ func (pm *ProgramManager) StartProgram(program *ProgramInfo) error {
 func (pm *ProgramManager) waitForProgramExit(program *ProgramInfo) {
 	err := program.Cmd.Wait()
 
-	pm.mutex.Lock()
-	defer pm.mutex.Unlock()
-
 	if err != nil {
 		log.Printf("程序 %s (PID: %d) 退出: %v", program.Name, program.Pid, err)
 	} else {
 		log.Printf("程序 %s (PID: %d) 正常退出", program.Name, program.Pid)
 	}
+
+	pm.mutex.Lock()
+	defer pm.mutex.Unlock()
 
 	// 重置PID
 	program.Pid = 0
