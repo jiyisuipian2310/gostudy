@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -13,10 +14,12 @@ import (
 func main() {
 	// 创建停止通道
 	stopCh := make(chan struct{})
+	var wg sync.WaitGroup
 
-	// 启动3个协议处理协程
+	// 启动2个协议处理协程
 	for i := 1; i <= 2; i++ {
-		go worker(i, stopCh)
+		wg.Add(1)
+		go worker(i, stopCh, &wg)
 	}
 
 	// 运行2秒后, 关闭通道，通知所有协程退出
@@ -24,12 +27,13 @@ func main() {
 	fmt.Println("\n主线程发送停止信号...")
 	close(stopCh)
 
-	// 等待一秒让协程退出
-	time.Sleep(1 * time.Second)
+	wg.Wait() // 等待所有协程结束
+
 	fmt.Println("主程序退出")
 }
 
-func worker(id int, stopCh <-chan struct{}) {
+func worker(id int, stopCh <-chan struct{}, wg *sync.WaitGroup) {
+	defer wg.Done()
 	num := 0
 	for {
 		select {
@@ -40,7 +44,7 @@ func worker(id int, stopCh <-chan struct{}) {
 		default:
 			num++
 			fmt.Printf("协程 %d: 正在处理数据, num: %d\n", id, num)
-			time.Sleep(100 * time.Microsecond)
+			time.Sleep(200 * time.Microsecond)
 		}
 	}
 }
